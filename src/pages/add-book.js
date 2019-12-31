@@ -9,7 +9,7 @@ const FormField = styled.div`
 `
 
 let fileReader
-if (typeof window !== undefined) {
+if (typeof window !== "undefined") {
   fileReader = new FileReader()
 }
 
