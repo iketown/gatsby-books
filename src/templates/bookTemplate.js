@@ -1,12 +1,17 @@
 import React from "react"
-import Layout from "../components/layout"
 import BookItem from "../components/BookItem"
 import { graphql } from "gatsby"
+import { BookComments } from "../components/common"
+import { useFirebaseCtx } from "../components/Firebase"
+
 const BookTemplate = props => {
-  console.log("props data", props.data)
+  const { firebase } = useFirebaseCtx()
   return (
     <section>
       <BookItem {...props.data.book} />
+      {!!firebase && (
+        <BookComments bookId={props.data.book.id} firebase={firebase} />
+      )}
     </section>
   )
 }

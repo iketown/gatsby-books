@@ -1,20 +1,30 @@
 import React, { useState } from "react"
-import { Link } from "gatsby"
-import { useAuth } from "../components/Firebase/index"
 import { useFirebaseCtx } from "../components/Firebase/context"
-import SEO from "../components/seo"
+import { Form, Input, Button, ErrorMessage } from "../components/common"
+import { useMounted } from "../utils/useMounted"
+import { navigate } from "gatsby"
 
 const Login = () => {
   const [formValues, setFormValues] = useState({ email: "", password: "" })
-  // const { firebase } = useAuth()
+  const [errorMsg, setErrorMsg] = useState("")
   const { firebase } = useFirebaseCtx()
+  let { isMounted } = useMounted()
+
   function handleSubmit(e) {
     e.preventDefault()
     const { email, password } = formValues
-    firebase.login({ email, password })
+    firebase
+      .login({ email, password })
+      .then(() => {
+        navigate("/")
+      })
+      .catch(err => {
+        isMounted && setErrorMsg(err.message)
+      })
   }
   const handleInputChange = e => {
     e.persist()
+    setErrorMsg("")
     setFormValues(old => ({
       ...old,
       [e.target.name]: e.target.value,
@@ -22,23 +32,28 @@ const Login = () => {
   }
   return (
     <section>
-      <form onSubmit={handleSubmit}>
-        <input
+      <Form onSubmit={handleSubmit}>
+        <Input
           onChange={handleInputChange}
           value={formValues.email}
           name="email"
           placeholder="email"
           type="email"
+          required
         />
-        <input
+        <Input
           onChange={handleInputChange}
           value={formValues.password}
           placeholder="password"
           name="password"
           type="password"
+          required
         />
-        <button type="submit">submit</button>
-      </form>
+        {!!errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+        <Button block type="submit">
+          submit
+        </Button>
+      </Form>
     </section>
   )
 }

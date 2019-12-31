@@ -4,7 +4,7 @@ import React from "react"
 import styled from "styled-components"
 import { useFirebaseCtx } from "./Firebase"
 
-const LogoutLink = styled.div`
+const LogoutLink = styled.span`
   text-align: right;
   &:hover {
     text-decoration: underline;
@@ -42,10 +42,23 @@ const HeaderContent = styled.div`
 const UserInfo = styled.div`
   text-align: right;
   color: white;
+  > a {
+    color: white;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`
+const Divider = styled.span`
+  margin: 0 8px;
+  padding-right: 1px;
+  background: #999;
 `
 
 const Header = ({ siteTitle }) => {
-  const { user, loading, firebase } = useFirebaseCtx()
+  const { user, firebase } = useFirebaseCtx()
+  console.log("USER", user)
   const handleLogout = () => {
     firebase.logout().then(() => {
       navigate("/login")
@@ -60,13 +73,24 @@ const Header = ({ siteTitle }) => {
         <div>
           {!!user && !!user.email && (
             <UserInfo>
-              hello {user.email}
+              <div>hello {user.username || user.email}</div>
+
               <LogoutLink onClick={handleLogout}>Logout</LogoutLink>
+              {!!user && !!user.isAdmin && (
+                <>
+                  <Divider />
+                  <Link to="/add-author">Add Author</Link>
+                  <Divider />
+                  <Link to="/add-book">Add Book</Link>
+                </>
+              )}
             </UserInfo>
           )}
           {(!user || !user.email) && (
             <LoginLink>
               <Link to="/login">Login</Link>
+              <Divider />
+              <Link to="/register">Register</Link>
             </LoginLink>
           )}
         </div>

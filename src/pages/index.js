@@ -1,7 +1,6 @@
 import React from "react"
 import { Link, graphql } from "gatsby"
 import BookItem from "../components/BookItem"
-import Layout from "../components/layout"
 import styled from "styled-components"
 
 const LinkButton = styled.div`

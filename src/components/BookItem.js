@@ -1,7 +1,6 @@
 import React from "react"
 import styled from "styled-components"
 import Img from "gatsby-image"
-
 const BookItemWrapper = styled.section`
   border: 1px solid #ddd;
   padding: 14px 8px;
@@ -30,17 +29,22 @@ const BookContent = styled.div`
 `
 
 const BookItem = ({ title, summary, author, children, localImage }) => {
-  console.log("localImage", localImage)
+  console.log(title, localImage)
   return (
     <BookItemWrapper>
-      <BookImage>
-        <Img fixed={localImage.childImageSharp.fixed} />
-      </BookImage>
+      {localImage && (
+        <BookImage>
+          <Img fixed={localImage.childImageSharp.fixed} />
+        </BookImage>
+      )}
       <BookContent>
         <h2>
           {title} <small>{author.name}</small>
         </h2>
-        <p>{summary}</p>
+        <p>
+          {summary.slice(0, 600)}
+          {summary.length > 600 && ". . ."}
+        </p>
         <div>{children}</div>
       </BookContent>
     </BookItemWrapper>
